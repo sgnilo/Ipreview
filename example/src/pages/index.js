@@ -26,11 +26,9 @@ export default class extends React.Component {
     constructor(props) {
         super(props)
         this.oridinary = React.createRef()
-        this.accordion = React.createRef()
-        this.nest = React.createRef()
+        this.download = React.createRef()
+        this.many = React.createRef()
         this.concise = React.createRef()
-        this.hideIcon = React.createRef()
-        this.moreNode = React.createRef()
         this.custom = React.createRef()
         this.state = {
             iconPosition: 'left',
@@ -40,27 +38,19 @@ export default class extends React.Component {
                     ref: this.oridinary,
                 },
                 {
-                    mode: '手风琴模式',
-                    ref: this.accordion,
+                    mode: '可供下载',
+                    ref: this.download,
                 },
                 {
-                    mode: '嵌套模式',
-                    ref: this.nest,
+                    mode: '多图模式',
+                    ref: this.many,
                 },
                 {
                     mode: '简洁模式',
                     ref: this.concise,
                 },
                 {
-                    mode: '隐藏图标',
-                    ref: this.hideIcon,
-                },
-                {
-                    mode: '额外节点',
-                    ref: this.moreNode,
-                },
-                {
-                    mode: '自定义面板',
+                    mode: '自定义图标',
                     ref: this.custom,
                 }, 
             ],
@@ -163,11 +153,15 @@ export default class extends React.Component {
     }
 
     render() {
-        const { Panel } = Collapse
         const { iconPosition, modes, activeMode, collapseApi, panelApi } = this.state
+        let url = 'https://drscdn.500px.org/photo/63978593/q%3D80_h%3D600/v2?sig=bfa4ebd5632d31fea893a35facc0a920932b1ebe4b2fe7a5ff3a948f9f2a69e2'
+        let urlList = []
+        for(let i = 0 ; i <= 5 ; i++){
+            urlList.push(url)
+        }
         return (
             <div className="demo-wrapper">
-                <div className="example-header">React-x-Collapse/折叠面板</div>
+                <div className="example-header">Ipreview/图片预览</div>
                 <div className="example-nav">
                     {modes.map(item => (
                         <div className={`nav-item${item.mode === activeMode ? ' nav-item-active' : ''}`} key={item.mode} onClick={() => {this.changeMode(item.mode)}}>{item.mode}</div>
@@ -175,59 +169,14 @@ export default class extends React.Component {
                 </div>
                 <div className="example-wrapper">
                     <p ref={this.oridinary} className="mode-title">普通模式</p>
-                    <Collapse onChange={(res) => {this.onChange(res)}} defaultActiveKey={[1, 2]}>
-                        <Panel targetKey={1} header="This is panel header 1"> {content}</Panel>
-                        <Panel targetKey={2} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} header="This is panel header 3" disabled={true}> {content}</Panel>
-                    </Collapse>
-                    <p ref={this.accordion} className="mode-title">手风琴模式</p>
-                    <Collapse accordion={true}>
-                        <Panel targetKey={1} header="This is panel header 1"> {content}</Panel>
-                        <Panel targetKey={2} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
-                    <p ref={this.nest} className="mode-title">嵌套模式</p>
-                    <Collapse>
-                        <Panel targetKey={1} header="This is panel header 1">
-                            <Collapse>
-                                <Panel targetKey={1} header="This is panel header 1">{content}</Panel>
-                                <Panel targetKey={2} header="This is panel header 2"> {content}</Panel>
-                                <Panel targetKey={3} header="This is panel header 3"> {content}</Panel>
-                                <Panel targetKey={4} header="This is panel header 4"> {content}</Panel>
-                            </Collapse>
-                        </Panel>
-                        <Panel targetKey={2} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
+                    <ImgPreview url={url}><img src={url}/></ImgPreview>
+                    <p ref={this.download} className="mode-title">可供下载</p>
+                    <ImgPreview download={true} url={url}><img src={url}/></ImgPreview>
+                    <p ref={this.many} className="mode-title">多图模式</p>
+                    <ImgPreview download={true} url={''} urlList={urlList}><img src={url}/></ImgPreview>
                     <p ref={this.concise} className="mode-title">简洁模式</p>
-                    <Collapse bordered={false}>
-                        <Panel targetKey={'a'} header="This is panel header 1"> {content}</Panel>
-                        <Panel targetKey={'b'} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={'c'} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
-                    <p ref={this.hideIcon} className="mode-title">隐藏图标</p>
-                    <Collapse>
-                        <Panel targetKey={1} showArrow={false} header="This is panel header 1"> {content}</Panel>
-                        <Panel targetKey={2} showArrow={false} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} showArrow={false} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
-                    <p ref={this.moreNode} className="mode-title">额外节点</p>
-                    <Collapse expandIconPosition={iconPosition}>
-                        <Panel targetKey={1} extra={<OtherNode />} header="This is panel header 1"> {content} </Panel>
-                        <Panel targetKey={2} extra={<OtherNode />} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} extra={<OtherNode />} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
-                    <div className="choose-box">
-                        点击对应的按钮切换图标的位置
-                        <div className="choose-item" onClick={() => {this.changeAlign('left')}}>left</div>
-                        <div className="choose-item" onClick={() => {this.changeAlign('right')}}>right</div>
-                    </div>
-                    <p ref={this.custom} className="mode-title">自定义面板</p>
-                    <Collapse expandIcon={<CustomIcon />}>
-                        <Panel targetKey={1} style={customPanelStyle} header="This is panel header 1"> {content}</Panel>
-                        <Panel targetKey={2} style={customPanelStyle} header="This is panel header 2"> {content}</Panel>
-                        <Panel targetKey={3} style={customPanelStyle} header="This is panel header 3"> {content}</Panel>
-                    </Collapse>
+                    <ImgPreview concise={true} url={url}><img src={url}/></ImgPreview>
+                    <p ref={this.custom} className="mode-title">自定义图标</p>
                     <p className="mode-title">API</p>
                     <table>
                         <thead>
