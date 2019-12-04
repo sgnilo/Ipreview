@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { PropTypes } from 'prop-types'
+import ReactDom from 'react-dom'
 
 const CloseSvg = <svg t="1575361937812" className="icon close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5238" width="40" height="40"><path d="M507.168 473.232L716.48 263.936a16 16 0 0 1 22.624 0l11.312 11.312a16 16 0 0 1 0 22.624L541.12 507.168 750.4 716.48a16 16 0 0 1 0 22.624l-11.312 11.312a16 16 0 0 1-22.624 0L507.168 541.12 297.872 750.4a16 16 0 0 1-22.624 0l-11.312-11.312a16 16 0 0 1 0-22.624l209.296-209.312-209.296-209.296a16 16 0 0 1 0-22.624l11.312-11.312a16 16 0 0 1 22.624 0l209.296 209.296z" p-id="5239" fill="#ffffff"></path></svg>
 
@@ -17,6 +18,53 @@ const ImgPre = <svg t="1575374368419" className="icon" viewBox="0 0 1024 1024" v
 
 const ImgNext = <svg t="1575374422968" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="24197" width="200" height="200"><path d="M695.04 520.32l-318.08-320c-12.8-12.8-33.28-12.8-45.44 0-12.8 12.8-12.8 33.28 0 45.44l293.12 295.04-303.36 298.88c-12.8 12.8-12.8 33.28 0 45.44 12.8 12.8 33.28 12.8 46.08 0l318.72-314.24C699.52 559.36 712.32 538.88 695.04 520.32z" p-id="24198" fill="#ffffff"></path></svg>
 
+const Reset = <svg t="1575455319909" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32171" width="200" height="200"><path d="M320.568889 264.533333a28.444444 28.444444 0 1 1 34.816 44.942223A256 256 0 0 0 512 768a28.444444 28.444444 0 0 1 0 56.888889 312.888889 312.888889 0 0 1-191.431111-560.355556z m378.88 498.005334a28.444444 28.444444 0 1 1-34.133333-45.511111A256 256 0 0 0 512 256a28.444444 28.444444 0 0 1 0.056889-56.888889 312.888889 312.888889 0 0 1 187.448889 563.427556z" fill="#ffffff" p-id="32172"></path><path d="M389.916444 235.861333c5.12 5.12 8.305778 12.288 8.305778 20.138667v170.666667a28.444444 28.444444 0 0 1-56.888889 0V284.444444H199.111111a28.444444 28.444444 0 1 1 0-56.888888h170.666667c7.850667 0 14.961778 3.185778 20.138666 8.305777zM634.083556 788.138667A28.330667 28.330667 0 0 1 625.777778 768v-170.666667a28.444444 28.444444 0 1 1 56.888889 0V739.555556h142.222222a28.444444 28.444444 0 0 1 0 56.888888h-170.666667a28.330667 28.330667 0 0 1-20.138666-8.305777z" fill="#ffffff" p-id="32173"></path></svg>
+
+let modalNode = document.getElementById('ipreview-model-box') || document.body.appendChild(document.createElement('div'))
+!modalNode.id && (modalNode.id = 'ipreview-model-box')
+
+const ModalView = (props) => {
+    const { concise, download, url, urlList, iconSet, zIndex, preview, rotate, scale, activeIndex } = props.data
+    const { large, small, turnLeft, turnRight, changePreview, addActiveIndex, minusActiveIndex, reset } = props
+    const maxIndex = urlList[0] && urlList.length - 1
+    return preview && 
+        <div className="preview-wrapper" onClick={(event) => {event.stopPropagation()}} onScroll={(event) => {event.stopPropagation()}} style={{zIndex: preview ? zIndex : undefined}}>
+            <img className="preview-img" src={urlList[0] ? urlList[activeIndex] : url} style={{transform: `rotate(${rotate}deg) scale(${scale})`}} />
+            <div className="preview-close preview-tool"onClick={() => {changePreview()}}>
+                {iconSet.close}
+            </div>
+            {!concise && urlList[0] && <div className="preview-count-box">
+                {`${activeIndex + 1} / ${urlList[0] ? urlList.length : ''}`}
+            </div>}
+            {!concise && urlList[0] && <div className={`preview-tool img-pre${activeIndex <= 0 ? ' disabled' : ''}`} onClick={() => {minusActiveIndex()}}>
+                {iconSet.pre}
+            </div>}
+            {!concise && urlList[0] && <div className={`preview-tool img-next${activeIndex >= maxIndex ? ' disabled' : ''}`} onClick={() => {addActiveIndex()}}>
+                {iconSet.next}
+            </div>}
+            {!concise && <div className="preview-tool-bar">
+                <div className="preview-tool" onClick={() => {turnLeft()}}>
+                    {iconSet.rotateLeft}
+                </div>
+                <div className="preview-tool" onClick={() => {turnRight()}}>
+                    {iconSet.rotateRight}
+                </div>
+                <div className={`preview-tool${scale >= 3 ? ' disabled' : ''}`} onClick={() => {large()}}>
+                    {iconSet.large}
+                </div>
+                <div className={`preview-tool${scale <= 0.1 ? ' disabled' : ''}`} onClick={() => {small()}}>
+                    {iconSet.small}
+                </div>
+                {download && <div className="preview-tool">
+                    <a href={urlList[0] ? urlList[activeIndex] : url} download>{iconSet.download}</a>
+                </div>}
+                <div className="preview-tool" onClick={() => {reset()}}>
+                    {iconSet.reset}
+                </div>
+            </div>}
+        </div>
+}
+
 class ImgPreview extends React.Component {
     constructor(props) {
         super(props)
@@ -26,10 +74,6 @@ class ImgPreview extends React.Component {
             scale: 1,
             activeIndex: 0
         }
-    }
-
-    cancelDefault(e) {
-        e.stopPropagation()
     }
 
     turnLeft() {
@@ -84,47 +128,34 @@ class ImgPreview extends React.Component {
         })
     }
 
+    reset() {
+        this.setState({
+            scale: 1,
+            rotate: 0
+        })
+    }
+    
+
+    componentDidUpdate() {
+        ReactDom.render(
+            <ModalView
+                data={{...this.state, ...this.props}}
+                changePreview={() => {this.changePreview()}}
+                small={() => {this.small()}}
+                large={() => {this.large()}}
+                minusActiveIndex={() => {this.minusActiveIndex()}}
+                addActiveIndex={() => {this.addActiveIndex()}}
+                turnLeft={() => {this.turnLeft()}}
+                turnRight={() => {this.turnRight()}}
+                reset={() => {this.reset()}}
+                />, modalNode)
+    }
+
     render() {
-        const { children, concise, download, url, urlList, iconSet, zIndex } = this.props
-        const { preview, rotate, scale, activeIndex } = this.state
-        const maxIndex = urlList[0] && urlList.length - 1
+        const { children } = this.props
         return (
         <div onClick={() => {this.changePreview()}}>
             {children}
-            {preview && (
-                <div className="preview-wrapper" onClick={(event) => {this.cancelDefault(event)}} onScroll={(event) => {this.cancelDefault(event)}} style={{zIndex: preview ? zIndex : undefined}}>
-                    <img className="preview-img" src={urlList[0] ? urlList[activeIndex] : url} style={{transform: `rotate(${rotate}deg) scale(${scale})`}} />
-                    <div className="preview-close preview-tool"onClick={() => {this.changePreview()}}>
-                        {iconSet.close}
-                    </div>
-                    {!concise && urlList[0] && <div className="preview-count-box">
-                        {`${activeIndex + 1} / ${urlList[0] ? urlList.length : ''}`}
-                    </div>}
-                    {!concise && urlList[0] && <div className={`preview-tool img-pre${activeIndex <= 0 ? ' disabled' : ''}`} onClick={() => {this.minusActiveIndex()}}>
-                        {iconSet.pre}
-                    </div>}
-                    {!concise && urlList[0] && <div className={`preview-tool img-next${activeIndex >= maxIndex ? ' disabled' : ''}`} onClick={() => {this.addActiveIndex()}}>
-                        {iconSet.next}
-                    </div>}
-                    {!concise && <div className="preview-tool-bar">
-                        <div className="preview-tool" onClick={() => {this.turnLeft()}}>
-                            {iconSet.rotateLeft}
-                        </div>
-                        <div className="preview-tool" onClick={() => {this.turnRight()}}>
-                            {iconSet.rotateRight}
-                        </div>
-                        <div className={`preview-tool${scale >= 3 ? ' disabled' : ''}`} onClick={() => {this.large()}}>
-                            {iconSet.large}
-                        </div>
-                        <div className={`preview-tool${scale <= 0.1 ? ' disabled' : ''}`} onClick={() => {this.small()}}>
-                            {iconSet.small}
-                        </div>
-                        {download && <div className="preview-tool">
-                            <a href={urlList[0] ? urlList[activeIndex] : url} download>{iconSet.download}</a>
-                        </div>}
-                    </div>}
-                </div>
-            )}
         </div>
         )
     }
@@ -151,7 +182,8 @@ ImgPreview.defaultProps = {
         rotateRight: TurnRight,
         large: ScaleLarge,
         small: ScaleSmall,
-        download: DownloadSvg
+        download: DownloadSvg,
+        reset: Reset
     },
     zIndex: 999
 }

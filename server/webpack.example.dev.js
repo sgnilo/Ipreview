@@ -15,7 +15,7 @@ export default {
         modules: ['node_modules'],
         extensions: ['.js', '.jsx', '.tsx', '.ts'],
         alias: {
-            'ipreview': path.resolve(__dirname, '../src'),
+            'ipreview-': path.resolve(__dirname, '../src'),
             'components': path.resolve(__dirname, '../example/src/components')
         }
     },

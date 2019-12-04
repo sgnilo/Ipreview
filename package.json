@@ -1,7 +1,7 @@
 {
-  "name": "Ipreview",
-  "version": "1.0.5",
-  "description": "Ipreview",
+  "name": "ipreview",
+  "version": "0.0.1",
+  "description": "ipreview",
   "main": "dist/ipreview.min.js",
   "scripts": {
     "start": "npm run dev",
@@ -84,6 +84,7 @@
     "webpack-dev-middleware": "^3.7.0",
     "webpack-dev-server": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
-    "webpack-md5-hash": "^0.0.6"
+    "webpack-md5-hash": "^0.0.6",
+    "ipreview": "0.0.1"
   }
 }
