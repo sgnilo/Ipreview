@@ -56,14 +56,18 @@ class ImgPreview extends React.Component {
         const maxLength = urlList && urlList.length
         if (this.state.activeIndex >= maxLength - 1) return false
         this.setState({
-            activeIndex: this.state.activeIndex + 1
+            activeIndex: this.state.activeIndex + 1,
+            scale: 1,
+            rotate: 0
         })
     }
 
     minusActiveIndex() {
         if (this.state.activeIndex <= 0) return false
         this.setState({
-            activeIndex: this.state.activeIndex - 1
+            activeIndex: this.state.activeIndex - 1,
+            scale: 1,
+            rotate: 0
         })
     }
 
@@ -85,10 +89,10 @@ class ImgPreview extends React.Component {
         const { preview, rotate, scale, activeIndex } = this.state
         const maxIndex = urlList[0] && urlList.length - 1
         return (
-        <div onClick={() => {this.changePreview()}} style={{zIndex: preview ? zIndex : undefined}}>
+        <div onClick={() => {this.changePreview()}}>
             {children}
             {preview && (
-                <div className="preview-wrapper" onClick={(event) => {this.cancelDefault(event)}} onScroll={(event) => {this.cancelDefault(event)}}>
+                <div className="preview-wrapper" onClick={(event) => {this.cancelDefault(event)}} onScroll={(event) => {this.cancelDefault(event)}} style={{zIndex: preview ? zIndex : undefined}}>
                     <img className="preview-img" src={urlList[0] ? urlList[activeIndex] : url} style={{transform: `rotate(${rotate}deg) scale(${scale})`}} />
                     <div className="preview-close preview-tool"onClick={() => {this.changePreview()}}>
                         {iconSet.close}
