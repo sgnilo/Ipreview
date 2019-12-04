@@ -21,9 +21,9 @@ npm install ipreview
 ## Usage
 
 ```
-import { Collapse } from 'react-collapse'
+import { ImgPreview } from 'ipreview'
 
-const { Panel } = Collapse
+const url = ''
 
-ReactDom.render(<Collapse><Panel></Panel></Collapse>, mountNode)
+ReactDom.render(<ImgPreview url={url}><img src={ur}/></ImgPreview>, mountNode)
 ```
