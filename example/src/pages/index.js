@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImgPreview } from '../../../src/index.js'
+import { ImgPreview } from '../../../dist/ipreview.min.js'
 
 
 export default class extends React.Component {

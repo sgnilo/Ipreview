@@ -154,7 +154,7 @@ class ImgPreview extends React.Component {
     render() {
         const { children } = this.props
         return (
-        <div onClick={() => {this.changePreview()}}>
+        <div style={{display: 'inline-block', verticalAlign: 'top'}} onClick={() => {this.changePreview()}}>
             {children}
         </div>
         )
