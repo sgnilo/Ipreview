@@ -66,6 +66,7 @@
     }
     .disabled{
         cursor: not-allowed;
+        filter: brightness(0.4);
         &:hover{
             background: none;
         }

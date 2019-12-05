@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
 import ReactDom from 'react-dom'
 
@@ -30,135 +30,84 @@ const ModalView = (props) => {
     return preview && 
         <div className="preview-wrapper" onClick={(event) => {event.stopPropagation()}} onScroll={(event) => {event.stopPropagation()}} style={{zIndex: preview ? zIndex : undefined}}>
             <img className="preview-img" src={urlList[0] ? urlList[activeIndex] : url} style={{transform: `rotate(${rotate}deg) scale(${scale})`}} />
-            <div className="preview-close preview-tool"onClick={() => {changePreview()}}>
+            <div className="preview-close preview-tool"onClick={() => changePreview()}>
                 {iconSet.close}
             </div>
             {!concise && urlList[0] && <div className="preview-count-box">
                 {`${activeIndex + 1} / ${urlList[0] ? urlList.length : ''}`}
             </div>}
-            {!concise && urlList[0] && <div className={`preview-tool img-pre${activeIndex <= 0 ? ' disabled' : ''}`} onClick={() => {minusActiveIndex()}}>
+            {!concise && urlList[0] && <div className={`preview-tool img-pre${activeIndex <= 0 ? ' disabled' : ''}`} onClick={() => minusActiveIndex()}>
                 {iconSet.pre}
             </div>}
-            {!concise && urlList[0] && <div className={`preview-tool img-next${activeIndex >= maxIndex ? ' disabled' : ''}`} onClick={() => {addActiveIndex()}}>
+            {!concise && urlList[0] && <div className={`preview-tool img-next${activeIndex >= maxIndex ? ' disabled' : ''}`} onClick={() => addActiveIndex()}>
                 {iconSet.next}
             </div>}
             {!concise && <div className="preview-tool-bar">
-                <div className="preview-tool" onClick={() => {turnLeft()}}>
+                <div className="preview-tool" onClick={() => turnLeft()}>
                     {iconSet.rotateLeft}
                 </div>
-                <div className="preview-tool" onClick={() => {turnRight()}}>
+                <div className="preview-tool" onClick={() => turnRight()}>
                     {iconSet.rotateRight}
                 </div>
-                <div className={`preview-tool${scale >= 3 ? ' disabled' : ''}`} onClick={() => {large()}}>
+                <div className={`preview-tool${scale >= 2.9 ? ' disabled' : ''}`} onClick={() => large()}>
                     {iconSet.large}
                 </div>
-                <div className={`preview-tool${scale <= 0.1 ? ' disabled' : ''}`} onClick={() => {small()}}>
+                <div className={`preview-tool${scale <= 0.2 ? ' disabled' : ''}`} onClick={() => small()}>
                     {iconSet.small}
                 </div>
                 {download && <div className="preview-tool">
                     <a href={urlList[0] ? urlList[activeIndex] : url} download>{iconSet.download}</a>
                 </div>}
-                <div className="preview-tool" onClick={() => {reset()}}>
+                <div className="preview-tool" onClick={() => reset()}>
                     {iconSet.reset}
                 </div>
             </div>}
         </div>
 }
 
-class ImgPreview extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            preview: false,
-            rotate: 0,
-            scale: 1,
-            activeIndex: 0
-        }
+const ImgPreview = (props) => {
+    const [preview, setPreview] = useState(false)
+    const [rotate, setRotate] = useState(0)
+    const [scale, setScale] = useState(1)
+    const [activeIndex, setActiveIndex] = useState(0)
+
+    function reset() {
+        setScale(1)
+        setRotate(0)
     }
 
-    turnLeft() {
-        this.setState({
-            rotate: this.state.rotate - 90
-        })
-    }
-    
-    turnRight() {
-        this.setState({
-            rotate: this.state.rotate + 90
-        })
+    function changeScale(newScale) {
+        if (newScale > 3 || newScale < 0.1) return false
+        setScale(newScale)
     }
 
-    large() {
-        if (this.state.scale >= 3) return false
-        this.setState({
-            scale: this.state.scale + 0.1
-        })
+    function changeActiveIndex (newIndex) {
+        if (newIndex >= props.urlList.length || newIndex < 0) return false
+        setActiveIndex(newIndex)
+        reset()
     }
 
-    addActiveIndex() {
-        const { urlList } = this.props
-        const maxLength = urlList && urlList.length
-        if (this.state.activeIndex >= maxLength - 1) return false
-        this.setState({
-            activeIndex: this.state.activeIndex + 1,
-            scale: 1,
-            rotate: 0
-        })
-    }
-
-    minusActiveIndex() {
-        if (this.state.activeIndex <= 0) return false
-        this.setState({
-            activeIndex: this.state.activeIndex - 1,
-            scale: 1,
-            rotate: 0
-        })
-    }
-
-    small() {
-        if (this.state.scale <= 0.1) return false
-        this.setState({
-            scale: this.state.scale - 0.1
-        })
-    }
-
-    changePreview(){
-        this.setState({
-            preview: !this.state.preview
-        })
-    }
-
-    reset() {
-        this.setState({
-            scale: 1,
-            rotate: 0
-        })
-    }
-    
-
-    componentDidUpdate() {
+    useEffect(() => {
         ReactDom.render(
-            <ModalView
-                data={{...this.state, ...this.props}}
-                changePreview={() => {this.changePreview()}}
-                small={() => {this.small()}}
-                large={() => {this.large()}}
-                minusActiveIndex={() => {this.minusActiveIndex()}}
-                addActiveIndex={() => {this.addActiveIndex()}}
-                turnLeft={() => {this.turnLeft()}}
-                turnRight={() => {this.turnRight()}}
-                reset={() => {this.reset()}}
-                />, modalNode)
-    }
-
-    render() {
-        const { children } = this.props
-        return (
-        <div style={{display: 'inline-block', verticalAlign: 'top'}} onClick={() => {this.changePreview()}}>
-            {children}
-        </div>
+        <ModalView
+            data={{preview, rotate, scale, activeIndex, ...props}}
+            changePreview={() => setPreview(!preview)}
+            small={() => changeScale(scale - 0.1)}
+            large={() => changeScale(scale + 0.1)}
+            minusActiveIndex={() => changeActiveIndex(activeIndex - 1)}
+            addActiveIndex={() => changeActiveIndex(activeIndex + 1)}
+            turnLeft={() => setRotate(rotate - 90)}
+            turnRight={() => setRotate(rotate + 90)}
+            reset={() => reset()}
+        />,
+        modalNode
         )
-    }
+    })
+
+    return <div style={{display: 'inline-block', verticalAlign: 'top'}} onClick={() => setPreview(!preview)}>
+                {props.children}
+            </div>
+
 }
 
 ImgPreview.propTypes = {
