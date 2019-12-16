@@ -1,5 +1,6 @@
 import React from 'react'
-import { ImgPreview } from '../../../dist/ipreview.min.js'
+//import { ImgPreview } from '../../../dist/ipreview.min.js'
+import {ImgPreview} from '../../../dist/ipreview.min.js'
 
 
 export default class extends React.Component {
@@ -82,6 +83,12 @@ export default class extends React.Component {
                         reset: null
                     }`,
                     intro: '预览图层中的icon集合，该对象可只填部分属性，属性取值为react节点',
+                },
+                {
+                    arg: 'canClick',
+                    type: 'boolean',
+                    default: 'false',
+                    intro: '原图片元素是否可用点击事件',
                 }
             ]
         }
@@ -97,12 +104,12 @@ export default class extends React.Component {
 
     render() {
         const { modes, activeMode, iPreviewApi } = this.state
-        let url = 'https://drscdn.500px.org/photo/63978593/q%3D80_h%3D600/v2?sig=bfa4ebd5632d31fea893a35facc0a920932b1ebe4b2fe7a5ff3a948f9f2a69e2'
+        let url = require('../assets/stock-photo-63978593.jpg')
         let urlList = [
-            'https://drscdn.500px.org/photo/63978593/q%3D80_h%3D600/v2?sig=bfa4ebd5632d31fea893a35facc0a920932b1ebe4b2fe7a5ff3a948f9f2a69e2',
-            'https://drscdn.500px.org/photo/65283001/q%3D80_h%3D600/v2?sig=fb397ea1715c528db2569228f14774aa79c6b98c1e45e4d66abdc60db23a59d2',
-            'https://drscdn.500px.org/photo/64682967/q%3D80_h%3D600/v2?sig=5091e0cca8c401b745b971221694eb991c8f2d64facf62afdb37c32dd91d46c3',
-            'https://drscdn.500px.org/photo/125902791/q%3D80_h%3D600/v2?sig=a244dc70da63d77b4bc3d658322dd16891b184089a83492aa3ca2ba7d25812e4'
+            require('../assets/stock-photo-63978593.jpg'),
+            require('../assets/stock-photo-64682967.jpg'),
+            require('../assets/stock-photo-65283001.jpg'),
+            require('../assets/stock-photo-125902791.jpg')
         ]
         const iconSet = {
             close: <svg t="1575425721236" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="24960" width="200" height="200"><path d="M509.866667 32C245.333333 32 32 247.466667 32 512s213.333333 480 477.866667 480S987.733333 776.533333 987.733333 512 774.4 32 509.866667 32z m0 896C281.6 928 96 742.4 96 512S281.6 96 509.866667 96 923.733333 281.6 923.733333 512s-185.6 416-413.866666 416z" fill="#ffffff" p-id="24961"></path><path d="M693.333333 330.666667c-12.8-12.8-32-12.8-44.8 0L512 467.2l-136.533333-136.533333c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l136.533333 136.533333-136.533333 136.533333c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.933333 8.533333 23.466666 8.533334s17.066667-2.133333 23.466667-8.533334l136.533333-136.533333 136.533334 136.533333c6.4 6.4 14.933333 8.533333 23.466666 8.533334s17.066667-2.133333 23.466667-8.533334c12.8-12.8 12.8-32 0-44.8L556.8 512l136.533333-136.533333c12.8-12.8 12.8-32 0-44.8z" fill="#ffffff" p-id="24962"></path></svg>,
@@ -128,7 +135,7 @@ export default class extends React.Component {
                     <p ref={this.download} className="mode-title">可供下载</p>
                     <ImgPreview download={true} url={url}><img src={url}/></ImgPreview>
                     <p ref={this.many} className="mode-title">多图模式</p>
-                    <ImgPreview download={true} url={''} urlList={urlList}><img src={url}/></ImgPreview>
+                    <ImgPreview download={true} url={urlList}><img src={url}/></ImgPreview>
                     <p ref={this.concise} className="mode-title">简洁模式</p>
                     <ImgPreview concise={true} url={url}><img src={url}/></ImgPreview>
                     <p ref={this.custom} className="mode-title">自定义图标</p>

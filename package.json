@@ -26,6 +26,7 @@
   "author": "Jiangping Xu",
   "license": "MIT",
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "prop-types": "^15.7.2"
   },
   "peerDependencies": {
@@ -63,9 +64,10 @@
     "eslint-plugin-prefer-object-spread": "^1.2.1",
     "eslint-plugin-react": "^7.14.2",
     "express": "^4.17.1",
-    "file-loader": "^4.0.0",
+    "file-loader": "^4.3.0",
     "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.19.1",
+    "ipreview": "0.0.2",
     "mini-css-extract-plugin": "^0.7.0",
     "node-sass": "^4.12.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
@@ -84,7 +86,6 @@
     "webpack-dev-middleware": "^3.7.0",
     "webpack-dev-server": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
-    "webpack-md5-hash": "^0.0.6",
-    "ipreview": "0.0.2"
+    "webpack-md5-hash": "^0.0.6"
   }
 }
